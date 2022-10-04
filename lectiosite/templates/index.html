@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>lectio site</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+            integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js"
+            integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk"
+            crossorigin="anonymous"></script>
+        <script src="js/script.js" defer></script>
+    </head>
+
+    <body>
+        <div class="container mt-2">
+            <h1>Welcome {{name}}</h1>
+        </div>
+        <h2 class="mx-3 mt-3">Classes for the day</h2>
+        <div class="card mt-3 mx-3" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">Titel 1</h5>
+                <p class="card-text">Undertitel</p>
+            </div>
+            <ul class="list-group list-group-flush" id="modules">
+                {% for module in sched %}
+                <li data-id="{{loop.index}}" 
+                    data-extrainfo="{{module.extra_info}}" 
+                    class="list-group-item"
+                    data-bs-toggle="popover" 
+                    data-bs-trigger="hover focus" 
+                    vbdata-bs-content="Disabled popover">{{module.subject}}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </body>
+</html>
