@@ -24,17 +24,24 @@
         <h2 class="mx-3 mt-3">Classes for the day</h2>
         <div class="card mt-3 mx-3" style="width: 18rem;">
             <div class="card-body">
-                <h5 class="card-title">Titel 1</h5>
-                <p class="card-text">Undertitel</p>
+                <h5 class="card-title">{{cdate.strftime('%Y-%m-%d')}}</h5>
+                <p class="card-text">Classes for the day</p>
             </div>
             <ul class="list-group list-group-flush" id="modules">
                 {% for module in sched %}
-                <li data-id="{{loop.index}}" 
-                    data-extrainfo="{{module.extra_info}}" 
-                    class="list-group-item"
-                    data-bs-toggle="popover" 
-                    data-bs-trigger="hover focus" 
-                    vbdata-bs-content="Disabled popover">{{module.subject}}</li>
+                <li data-id="{{loop.index}}" data-extrainfo="{{module.extra_info}}" class="list-group-item">{{module.subject}}
+                    <div>
+                        {% set timestr = module.start_time|string %}
+                        {% set stime = timestr.split(' ')[1].split(':') %}
+                        {% set timestr = module.end_time|string %}
+                        {% set etime = timestr.split(' ')[1].split(':') %}
+                        {{stime[0] + ':' + stime[1] + ' - ' + etime[0] + ':' + etime[1]}}
+                    </div>
+                    <div id="h{{loop.index}}" hidden="true">
+                        Extra info here
+                    </div>
+                </li>
+                
                 {% endfor %}
             </ul>
         </div>

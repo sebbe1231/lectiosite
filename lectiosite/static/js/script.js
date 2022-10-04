@@ -4,8 +4,10 @@ window.onload = () =>{
 
     for (let index = 0; index < modules.length; index++) {
         modules[index].addEventListener("mouseover", e => {
-            console.log(e.target.attributes["data-extrainfo"].value);
+            console.log(e.target.attributes);
             console.log(index);
+
+            
         })
     }
 }
