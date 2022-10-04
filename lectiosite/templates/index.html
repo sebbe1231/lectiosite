@@ -29,19 +29,16 @@
             </div>
             <ul class="list-group list-group-flush" id="modules">
                 {% for module in sched %}
-                <li data-id="{{loop.index}}" data-extrainfo="{{module.extra_info}}" class="list-group-item">{{module.subject}}
-                    <div>
-                        {% set timestr = module.start_time|string %}
-                        {% set stime = timestr.split(' ')[1].split(':') %}
-                        {% set timestr = module.end_time|string %}
-                        {% set etime = timestr.split(' ')[1].split(':') %}
-                        {{stime[0] + ':' + stime[1] + ' - ' + etime[0] + ':' + etime[1]}}
+                <li data-id="{{loop.index}}" class="list-group-item text-success">{{module.subject}} <span class="d-flex badge rounded-pill text-bg-success">Now</span>
+                    <div class="text-muted">
+                        {% set stime = module.start_time.strftime('%H:%M') %}
+                        {% set etime = module.end_time.strftime('%H:%M') %}
+                        {{stime + ' - ' + etime}}
                     </div>
-                    <div id="h{{loop.index}}" hidden="true">
-                        Extra info here
+                    <div id="h{{loop.index}}" style="display: none;" class="text-muted">
+                        {{module.extra_info}}
                     </div>
                 </li>
-                
                 {% endfor %}
             </ul>
         </div>

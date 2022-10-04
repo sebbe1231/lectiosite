@@ -4,10 +4,10 @@ window.onload = () =>{
 
     for (let index = 0; index < modules.length; index++) {
         modules[index].addEventListener("mouseover", e => {
-            console.log(e.target.attributes);
-            console.log(index);
-
-            
+            e.target.lastElementChild.style.display = "block"
+        })
+        modules[index].addEventListener("mouseleave", e => {
+            e.target.lastElementChild.style.display = "none"
         })
     }
 }
