@@ -18,29 +18,44 @@
     </head>
 
     <body>
-        <div class="container mt-2">
-            <h1>Welcome {{name}}</h1>
-        </div>
-        <h2 class="mx-3 mt-3">Classes for the day</h2>
-        <div class="card mt-3 mx-3" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">{{cdate.strftime('%Y-%m-%d')}}</h5>
-                <p class="card-text">Classes for the day</p>
+        <div class="container mt-4">
+            <h1 class="text-center">Welcome, {{name}}!</h1>
+            <h2 class="mx-3 mt-3">Classes for the day</h2>
+            <div class="grid">
+                <div class="card mt-3 mx-3" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{cdate.strftime('%Y-%m-%d')}}</h5>
+                        <p class="card-text">Classes for the day</p>
+                    </div>
+                    <ul class="list-group list-group-flush" id="modules">
+                        {% for module in sched %}
+                        <li data-id="{{loop.index}}" class="list-group-item">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <span>{{module.subject}}</span>
+                                    <div class="text-muted">
+                                        {% set stime = module.start_time.strftime('%H:%M') %}
+                                        {% set etime = module.end_time.strftime('%H:%M') %}
+                                        {% set lokale = module.room.split(' (')[0] %}
+                                        {{stime + ' - ' + etime + ' (' + lokale + ')'}}
+                                    </div>
+                                </div>
+                                <div class="ps-2">
+                                    <span class="badge rounded-pill text-bg-success">Now</span>
+                                </div>
+                            </div>
+                            <div style="display: none;">
+                                <hr>
+                                <span class="fst-italic d-block">{{module.teacher}}</span>
+                                {% if module.extra_info %}
+                                <span class="fw-light text-muted">{{module.extra_info}}</span>
+                                {% endif %}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
-            <ul class="list-group list-group-flush" id="modules">
-                {% for module in sched %}
-                <li data-id="{{loop.index}}" class="list-group-item text-success">{{module.subject}} <span class="d-flex badge rounded-pill text-bg-success">Now</span>
-                    <div class="text-muted">
-                        {% set stime = module.start_time.strftime('%H:%M') %}
-                        {% set etime = module.end_time.strftime('%H:%M') %}
-                        {{stime + ' - ' + etime}}
-                    </div>
-                    <div id="h{{loop.index}}" style="display: none;" class="text-muted">
-                        {{module.extra_info}}
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
         </div>
     </body>
 </html>

@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request
 from lectio import Lectio
 from datetime import datetime
+from os import environ
 
 app = Flask(__name__, static_folder='static/', static_url_path='')
-lect = Lectio(<inst_id>, "<username>", "<password>")
+lect = Lectio(environ['INST_ID'], environ['USERNAME'], environ['PASSWORD'])
 
 @app.route("/")
 def index():
-    # f"Welcome, {lec.me().name}!"
     sched = lect.me().get_schedule(datetime.now(), datetime.now())
     return render_template('index.html', name=lect.me().name, 
         sched=sched, cdate=datetime.now())
