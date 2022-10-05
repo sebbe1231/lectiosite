@@ -1,0 +1,8 @@
+.modul {
+    cursor: pointer;
+    transition: all 50ms ease-in-out;
+}
+
+.modul:hover {
+    background-color: #efefef;
+}

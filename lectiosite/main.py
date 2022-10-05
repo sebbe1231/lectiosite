@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from lectio import Lectio
-from datetime import datetime
+from datetime import datetime, timedelta
 from os import environ
 
 app = Flask(__name__, static_folder='static/', static_url_path='')

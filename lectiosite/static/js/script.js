@@ -1,5 +1,5 @@
-window.onload = () =>{
-    const class2 = document.querySelector("#class2");
+window.onload = () => {
+    const countdown = document.querySelector("#countdown");
     const modules = document.getElementById("modules").getElementsByTagName("li");
 
     for (let index = 0; index < modules.length; index++) {
@@ -9,5 +9,18 @@ window.onload = () =>{
         modules[index].addEventListener("mouseleave", e => {
             e.currentTarget.lastElementChild.style.display = "none"
         })
+        modules[index].addEventListener("click", e => {
+            e.preventDefault();
+
+            window.location.href = "http://127.0.0.1:8080/module.html"
+        })
     }
+
+    setInterval(() => {
+        const last_module = modules[modules.length - 1]
+        const module_time = last_module.querySelector("#time").attributes["data-endtime"]
+        const end = new Date(module_time.value) - new Date();
+
+        countdown.innerHTML = new Date(end).toISOString().split("T")[1].split(".")[0] + " until school is done";
+    }, 1000);
 }

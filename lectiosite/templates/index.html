@@ -7,6 +7,7 @@
         <title>lectio site</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
             integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+        <link href="/style/style.css" rel="stylesheet" />
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
             integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
@@ -15,33 +16,40 @@
             integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk"
             crossorigin="anonymous"></script>
         <script src="js/script.js" defer></script>
+        
     </head>
 
     <body>
         <div class="container mt-4">
             <h1 class="text-center">Welcome, {{name}}!</h1>
-            <h2 class="mx-3 mt-3">Classes for the day</h2>
+            <h5 id="countdown" class="text-center">99:99:99 until school is done</h2>
             <div class="grid">
                 <div class="card mt-3 mx-3" style="width: 18rem;">
-                    <div class="card-body">
+                    <div class="card-header text-white bg-dark">
                         <h5 class="card-title">{{cdate.strftime('%Y-%m-%d')}}</h5>
                         <p class="card-text">Classes for the day</p>
                     </div>
                     <ul class="list-group list-group-flush" id="modules">
                         {% for module in sched %}
-                        <li data-id="{{loop.index}}" class="list-group-item">
+                        <li data-id="{{loop.index}}" class="list-group-item modul">
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <span>{{module.subject}}</span>
-                                    <div class="text-muted">
+                                    <div id="time" data-endtime="{{module.end_time.isoformat()}}" class="text-muted">
                                         {% set stime = module.start_time.strftime('%H:%M') %}
                                         {% set etime = module.end_time.strftime('%H:%M') %}
-                                        {% set lokale = module.room.split(' (')[0] %}
-                                        {{stime + ' - ' + etime + ' (' + lokale + ')'}}
+                                        {{stime + ' - ' + etime}}
                                     </div>
                                 </div>
-                                <div class="ps-2">
-                                    <span class="badge rounded-pill text-bg-success">Now</span>
+                                <div class="d-flex flex-column justify-items-start ps-3">
+                                    <div>
+                                        <span class="badge rounded-pill text-bg-secondary">{{module.room.split('(')[0]}}</span>
+                                    </div>
+                                    {% if module.start_time <= cdate and module.end_time>= cdate %}
+                                        <div>
+                                            <span class="badge rounded-pill text-bg-success">Now</span>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div style="display: none;">
