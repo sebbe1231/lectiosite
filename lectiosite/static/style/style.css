@@ -6,3 +6,11 @@
 .modul:hover {
     background-color: #efefef;
 }
+
+p {
+    margin: 0;
+}
+
+.flex-even{
+    flex: 1;
+}

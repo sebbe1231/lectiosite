@@ -12,7 +12,7 @@ window.onload = () => {
         modules[index].addEventListener("click", e => {
             e.preventDefault();
 
-            window.location.href = "http://127.0.0.1:8080/module.html"
+            $('#classmodal' + modules[index].attributes["data-id"].value).modal('show');
         })
     }
 
@@ -21,6 +21,11 @@ window.onload = () => {
         const module_time = last_module.querySelector("#time").attributes["data-endtime"]
         const end = new Date(module_time.value) - new Date();
 
-        countdown.innerHTML = new Date(end).toISOString().split("T")[1].split(".")[0] + " until school is done";
+        if (new Date(module_time.value) < new Date()) {
+            countdown.innerHTML = "No more school today! Isn't that nice?";
+        }
+        else {
+            countdown.innerHTML = new Date(end).toISOString().split("T")[1].split(".")[0] + " until school is done";
+        }
     }, 1000);
 }
