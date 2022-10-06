@@ -14,3 +14,8 @@ p {
 .flex-even{
     flex: 1;
 }
+
+.scroll{
+    max-height: calc(100vh - 20%);
+    overflow-y: auto;
+}
