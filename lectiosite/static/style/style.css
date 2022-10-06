@@ -16,6 +16,6 @@ p {
 }
 
 .scroll{
-    max-height: calc(100vh - 20%);
+    max-height: calc(100vh - 25%);
     overflow-y: auto;
 }

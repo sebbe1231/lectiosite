@@ -1,6 +1,10 @@
 window.onload = () => {
     const countdown = document.querySelector("#countdown");
     const modules = document.getElementById("modules").getElementsByTagName("li");
+    const rooms = document.querySelector("#rooms");
+    const room_search = document.querySelector("#room-search");
+    const room_form = document.querySelector("#room-form")
+    const room_list = document.querySelector("#room-list")
 
     for (let index = 0; index < modules.length; index++) {
         modules[index].addEventListener("mouseover", e => {
@@ -15,6 +19,12 @@ window.onload = () => {
             $('#classmodal' + modules[index].attributes["data-id"].value).modal('show');
         })
     }
+
+    room_search.addEventListener("click", e => {
+        const room = rooms.value
+        
+        fetch(`/search_rooms/${room}`).then(rep => console.log(rep))
+    })
 
     setInterval(() => {
         const last_module = modules[modules.length - 1]

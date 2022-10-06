@@ -12,5 +12,11 @@ def index():
     return render_template('index.html', name=lect.me().name, 
         sched=sched, cdate=datetime.now())
 
+@app.route("/searc_rooms/<room>", methods=["POST"])
+def get_rooms(room):
+    rooms_object = lect.get_school().search_for_rooms(room)
+    return rooms_object
+    
+
 if __name__ == '__main__':
     app.run('0.0.0.0', 8080, debug=True)
