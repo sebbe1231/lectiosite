@@ -3,8 +3,13 @@ window.onload = () => {
     const modules = document.getElementById("modules").getElementsByTagName("li");
     const rooms = document.querySelector("#rooms");
     const room_search = document.querySelector("#room-search");
-    const room_form = document.querySelector("#room-form")
     const room_list = document.querySelector("#room-list")
+    const user_search = document.querySelector("#user-search")
+    const users = document.querySelector("#users")
+    const user_list = document.querySelector("#user-list")
+    const student_search = document.querySelector("#student-search")
+    const teacher_search = document.querySelector("#teacher-search")
+    const initial_search = document.querySelector("#initial-search")
 
     for (let index = 0; index < modules.length; index++) {
         modules[index].addEventListener("mouseover", e => {
@@ -20,10 +25,119 @@ window.onload = () => {
         })
     }
 
-    room_search.addEventListener("click", e => {
-        const room = rooms.value
+    room_search.addEventListener("submit", e => {
+        e.preventDefault();
         
-        fetch(`/search_rooms/${room}`).then(rep => console.log(rep))
+        const room = rooms.value
+        document.getElementById('room-list').innerHTML = ""
+        
+        fetch(`/search_rooms`, {
+            method: "POST",
+            body: JSON.stringify({room}),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(rep => rep.json()).then(data => {
+            data.forEach(i => {
+                const node = document.createElement("li");
+                const textnode = document.createTextNode(i);
+                node.appendChild(textnode);
+                node.classList.add("list-group-item");
+                room_list.appendChild(node);
+            });
+        })
+    })
+
+    user_search.addEventListener("submit", e => {
+        e.preventDefault();
+
+        const user = users.value
+        user_list.innerHTML = "";
+
+        fetch(`/search_users`, {
+            method: "POST",
+            body: JSON.stringify({user}),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(rep => rep.json()).then(data => {
+            data.forEach(i => {
+                const node = document.createElement("li");
+                const textnode = document.createTextNode(i);
+                node.appendChild(textnode);
+                node.classList.add("list-group-item");
+                user_list.appendChild(node);
+            });
+        })
+    })
+
+    student_search.addEventListener("click", e => {
+        e.preventDefault();
+
+        const user = users.value
+        user_list.innerHTML = "";
+
+        fetch(`/search_students`, {
+            method: "POST",
+            body: JSON.stringify({user}),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(rep => rep.json()).then(data => {
+            data.forEach(i => {
+                const node = document.createElement("li");
+                const textnode = document.createTextNode(i);
+                node.appendChild(textnode);
+                node.classList.add("list-group-item");
+                user_list.appendChild(node);
+            });
+        })
+    })
+
+    teacher_search.addEventListener("click", e => {
+        e.preventDefault();
+
+        const user = users.value
+        user_list.innerHTML = "";
+
+        fetch(`/search_teachers`, {
+            method: "POST",
+            body: JSON.stringify({user}),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(rep => rep.json()).then(data => {
+            data.forEach(i => {
+                const node = document.createElement("li");
+                const textnode = document.createTextNode(i);
+                node.appendChild(textnode);
+                node.classList.add("list-group-item");
+                user_list.appendChild(node);
+            });
+        })
+    })
+
+    initial_search.addEventListener("click", e => {
+        e.preventDefault();
+
+        const user = users.value
+        user_list.innerHTML = "";
+
+        fetch(`/search_initials`, {
+            method: "POST",
+            body: JSON.stringify({user}),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(rep => rep.json()).then(data => {
+            data.forEach(i => {
+                const node = document.createElement("li");
+                const textnode = document.createTextNode(i);
+                node.appendChild(textnode);
+                node.classList.add("list-group-item");
+                user_list.appendChild(node);
+            });
+        })
     })
 
     setInterval(() => {

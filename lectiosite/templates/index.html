@@ -25,7 +25,7 @@
         <div class="container mt-4">
             <h1 class="text-center">Welcome, {{name}}!</h1>
             <h5 id="countdown" class="text-center">00:00:00 until school is done</h2>
-            <div class="d-flex justify-content-between" style="position: fixed;">
+            <div class="d-flex justify-content-between">
                 <div class="card mt-3 mx-3" style="width: 18rem; height: 0%;">
                     <div class="card-header text-white bg-dark">
                         <h5 class="card-title">{{cdate.strftime('%Y-%m-%d')}}</h5>
@@ -121,21 +121,22 @@
 
                 <div class="d-flex flex-column mt-3 mx-3" style="width: 25rem;">
                     <div class="input-group mb-0">
-                        <button type="button" class="btn btn-outline-secondary">All Users</button>
-                        <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="visually-hidden">Toggle Dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Students</a></li>
-                            <li><a class="dropdown-item" href="#">Teachers</a></li>
-                            <li><a class="dropdown-item" href="#">Initials</a></li>
-                        </ul>
-                        <input type="text" class="form-control" aria-label="User search">
+                        <form id="user-search" class="d-flex flex-row flex-fill">
+                            <input type="submit" class="btn btn-outline-secondary" value="All users">
+                            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" id="student-search">Students</a></li>
+                                <li><a class="dropdown-item" href="#" id="teacher-search">Teachers</a></li>
+                                <li><a class="dropdown-item" href="#" id="initial-search">Initials</a></li>
+                            </ul>
+                            <input type="text" class="form-control" aria-label="User search" id="users">
+                        </form>
                     </div>
-                    <div class="collapse" id="usercollapse">
+                    <div>
                         <div class="card m-1 scroll">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">An item</li>
+                            <ul class="list-group list-group-flush" id="user-list">
                             </ul>
                         </div>
                     </div>
@@ -143,37 +144,14 @@
 
                 <div class="d-flex flex-column mt-3 mx-3" style="width: 25rem;">
                     <div class="input-group mb-0">
-                        <form>
-                            <button type="button" class="btn btn-outline-secondary" id="room-search">Rooms</button>
-                            <input type="text" class="form-control" aria-label="Rooms search" name="room-search" id="rooms">
+                        <form id="room-search" class="d-flex flex-row flex-fill">
+                            <input type="submit" class="btn btn-outline-secondary" value="Rooms">
+                            <input type="text" class="form-control" aria-label="Rooms search" id="rooms">
                         </form>
                     </div>
-                    <div id="searchcollapse">
+                    <div>
                         <div class="card m-1 scroll">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">An item</li>
+                            <ul class="list-group list-group-flush" id="room-list">
                             </ul>
                         </div>
                     </div>
