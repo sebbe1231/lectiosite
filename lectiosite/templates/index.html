@@ -46,7 +46,7 @@
                                 <div class="d-flex flex-column justify-items-start ps-3">
                                     <div>
                                         {% if module.room %}
-                                        <span class="badge rounded-pill text-bg-secondary">{{module.room.split('(')[0]}}</span>
+                                        <span class="badge rounded-pill text-bg-secondary">{{module.room.split('(')[0]|e}}</span>
                                         {% else %}
                                         <span class="badge rounded-pill text-bg-secondary">None</span>
                                         {% endif %}
@@ -60,9 +60,9 @@
                             </div>
                             <div style="display: none;">
                                 <hr>
-                                <span class="fst-italic d-block">{{module.teacher}}</span>
+                                <span class="fst-italic d-block">{{module.teacher|e}}</span>
                                 {% if module.extra_info %}
-                                <span class="fw-light text-muted">{{module.extra_info}}</span>
+                                <span class="fw-light text-muted">{{module.extra_info|e}}</span>
                                 {% endif %}
                             </div>
                         </li>
@@ -70,7 +70,7 @@
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h1 class="modal-title">{{module.subject}}</h1>
+                                        <h1 class="modal-title">{{module.subject|e}}</h1>
                                         <button type="button" class="btn-close me-2" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -82,30 +82,19 @@
                                         </h3>
                                         <div class="d-flex justify-content-center">
                                             <div class="flex-even">
-                                                <p class="fw-bold">
-                                                    Room:
-                                                </p>
-                                                <p>
-                                                    {{module.room}}
-                                                </p>
+                                                <p class="fw-bold">Room:</p>
+                                                <p>{{module.room|e}}</p>
                                             </div>
                                             <div class="flex-even">
-                                                <p class="fw-bold">
-                                                    Teacher:
-                                                </p>
-                                                <p>
-                                                    {{module.teacher}}
-                                                </p>
+                                                <p class="fw-bold">Teacher:</p>
+                                                <p>{{module.teacher|e}}</p>
                                             </div>
                                         </div>
                                         {% if module.extra_info %}
+                                        <hr>
                                         <div>
-                                            <p class="fw-bold mt-2">
-                                                <small>Extra info:</small>
-                                            </p>
-                                            <p>
-                                                <small>{{module.extra_info}}</small>
-                                            </p>
+                                            <p class="fw-bold"><small>Extra info:</small></p>
+                                            <p><small>{{module.extra_info|e}}</small></p>
                                         </div>
                                         {% endif %}
                                     </div>
@@ -120,8 +109,8 @@
                 </div>
 
                 <div class="d-flex flex-column mt-3 mx-3" style="width: 25rem;">
-                    <div class="input-group mb-0">
-                        <form id="user-search" class="d-flex flex-row flex-fill">
+                    <form id="user-search">
+                        <div class="input-group mb-0">
                             <input type="submit" class="btn btn-outline-secondary" value="All users">
                             <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span class="visually-hidden">Toggle Dropdown</span>
@@ -132,23 +121,63 @@
                                 <li><a class="dropdown-item" href="#" id="initial-search">Initials</a></li>
                             </ul>
                             <input type="text" class="form-control" aria-label="User search" id="users">
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                     <div>
                         <div class="card m-1 scroll">
                             <ul class="list-group list-group-flush" id="user-list">
                             </ul>
                         </div>
                     </div>
+                    <div class="modal fade" tabindex="-1" aria-hidden="true" id="usermodal" data-bs-backdrop="static">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 id="usermodal-name">Name</h1>
+                                    <button type="button" class="btn-close me-2" data-bs-dismiss="modal" aria-label="Close" id="usermodal-close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="d-flex justify-content-center">
+                                        <div class="flex-even">
+                                            <p class="fw-bold" id="usermodal-class-initial-text">Class/initials:</p>
+                                            <p id="usermodal-class-initial">stuff</p>
+                                        </div>
+                                        <div class="flex-even">
+                                            <p class="fw-bold">Type:</p>
+                                            <p id="usermodal-type">stuff</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="d-flex justify-content-evenly mt-3">
+                                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#usermodal-collapse" aria-controls="usermodal-collapse" aria-expanded="false" id="usermodal-sched-btn">Schedule</button>
+                                    </div>
+                                    <div class="collapse" id="usermodal-collapse">
+                                        <div class="d-flex justify-content-center mt-3">
+                                            <div class="card" style="width: 18rem;">
+                                                <div class="card-header">
+                                                Today
+                                                </div>
+                                                <ul class="list-group list-group-flush" id="usermodal-sched-list">
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-start modal-footer">
+                                    <p id="usermodal-id">ID</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="d-flex flex-column mt-3 mx-3" style="width: 25rem;">
-                    <div class="input-group mb-0">
-                        <form id="room-search" class="d-flex flex-row flex-fill">
+                    <form id="room-search">
+                        <div class="input-group mb-0">
                             <input type="submit" class="btn btn-outline-secondary" value="Rooms">
                             <input type="text" class="form-control" aria-label="Rooms search" id="rooms">
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                     <div>
                         <div class="card m-1 scroll">
                             <ul class="list-group list-group-flush" id="room-list">

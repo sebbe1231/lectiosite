@@ -25,6 +25,67 @@ window.onload = () => {
         })
     }
 
+    
+    $( "#usermodal-close" ).click(e => {
+        $('#usermodal-collapse').collapse("hide")
+    });
+
+    function userModal(data) {
+        $("#usermodal-name").text(data["name"]);
+
+        if (data["initials"] === null) {
+            $("#usermodal-class-initial-text").text("Class:");
+            $("#usermodal-class-initial").text(data["class"]);
+        }
+        else {
+            $("#usermodal-class-initial-text").text("Initials:");
+            $("#usermodal-class-initial").text(data["initials"]);
+        }
+        
+        $("#usermodal-type").text(data["type"]);
+        $("#usermodal-id").text(data["user_id"]);
+            
+        document.querySelector("#usermodal-sched-btn").addEventListener("click", e => {
+            e.preventDefault();
+
+            user_id = data["user_id"]
+
+            fetch(`/get_user_sched`, {
+                method: "POST",
+                body: JSON.stringify({user_id}),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(rep => rep.json()).then(data => {
+                data.forEach(i => {
+                    start_time = new Date(i["start_time"]).toISOString().split("T")[1].split(".")[0]
+                    end_time = new Date(i["end_time"]).toISOString().split("T")[1].split(".")[0]
+                    $("#usermodal-sched-list").append(`
+                        <li class="list-group-item" id="usermodal-sched-list">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <span>${i["subject"]}</span>
+                                    <div id="time" class="text-muted">
+                                        ${start_time.slice(0, 5)} - ${end_time.slice(0, 5)}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column justify-content-start">
+                                <span class="text-muted">${i["room"]}</span>
+                                <span class="text-muted">${i["teacher"]}</span>
+                            </div>
+                        </li>
+                    `);
+                });
+            })
+
+            // I do this to remove the old event listener, or else 2 post requests would be sent
+            const old_button = document.querySelector("#usermodal-sched-btn");
+            const new_button = old_button.cloneNode(true);
+            old_button.parentNode.replaceChild(new_button, old_button)
+        })
+    }
+
     room_search.addEventListener("submit", e => {
         e.preventDefault();
         
@@ -40,9 +101,10 @@ window.onload = () => {
         }).then(rep => rep.json()).then(data => {
             data.forEach(i => {
                 const node = document.createElement("li");
-                const textnode = document.createTextNode(i);
+                const textnode = document.createTextNode(i["name"]);
                 node.appendChild(textnode);
                 node.classList.add("list-group-item");
+                node.setAttribute('id',i["room_id"])
                 room_list.appendChild(node);
             });
         })
@@ -54,7 +116,7 @@ window.onload = () => {
         const user = users.value
         user_list.innerHTML = "";
 
-        fetch(`/search_users`, {
+        fetch(`/search_users/users`, {
             method: "POST",
             body: JSON.stringify({user}),
             headers: {
@@ -63,9 +125,18 @@ window.onload = () => {
         }).then(rep => rep.json()).then(data => {
             data.forEach(i => {
                 const node = document.createElement("li");
-                const textnode = document.createTextNode(i);
+                const textnode = document.createTextNode(i["name"]);
                 node.appendChild(textnode);
                 node.classList.add("list-group-item");
+                node.setAttribute('id',i["user_id"]);
+                node.addEventListener("click", e => {
+                    e.preventDefault();
+                    
+                    document.querySelector('#usermodal-sched-list').innerHTML = ""
+
+                    userModal(i)
+                    $('#usermodal').modal('show');
+                })
                 user_list.appendChild(node);
             });
         })
@@ -77,7 +148,7 @@ window.onload = () => {
         const user = users.value
         user_list.innerHTML = "";
 
-        fetch(`/search_students`, {
+        fetch(`/search_users/students`, {
             method: "POST",
             body: JSON.stringify({user}),
             headers: {
@@ -86,9 +157,17 @@ window.onload = () => {
         }).then(rep => rep.json()).then(data => {
             data.forEach(i => {
                 const node = document.createElement("li");
-                const textnode = document.createTextNode(i);
+                const textnode = document.createTextNode(i["name"]);
                 node.appendChild(textnode);
                 node.classList.add("list-group-item");
+                node.addEventListener("click", e => {
+                    e.preventDefault();
+                    
+                    document.querySelector('#usermodal-sched-list').innerHTML = ""
+
+                    userModal(i)
+                    $('#usermodal').modal('show');
+                })
                 user_list.appendChild(node);
             });
         })
@@ -100,7 +179,7 @@ window.onload = () => {
         const user = users.value
         user_list.innerHTML = "";
 
-        fetch(`/search_teachers`, {
+        fetch(`/search_users/teachers`, {
             method: "POST",
             body: JSON.stringify({user}),
             headers: {
@@ -109,9 +188,17 @@ window.onload = () => {
         }).then(rep => rep.json()).then(data => {
             data.forEach(i => {
                 const node = document.createElement("li");
-                const textnode = document.createTextNode(i);
+                const textnode = document.createTextNode(i["name"]);
                 node.appendChild(textnode);
                 node.classList.add("list-group-item");
+                node.addEventListener("click", e => {
+                    e.preventDefault();
+                    
+                    document.querySelector('#usermodal-sched-list').innerHTML = ""
+
+                    userModal(i)
+                    $('#usermodal').modal('show');
+                })
                 user_list.appendChild(node);
             });
         })
@@ -123,7 +210,7 @@ window.onload = () => {
         const user = users.value
         user_list.innerHTML = "";
 
-        fetch(`/search_initials`, {
+        fetch(`/search_users/initials`, {
             method: "POST",
             body: JSON.stringify({user}),
             headers: {
@@ -132,18 +219,30 @@ window.onload = () => {
         }).then(rep => rep.json()).then(data => {
             data.forEach(i => {
                 const node = document.createElement("li");
-                const textnode = document.createTextNode(i);
+                const textnode = document.createTextNode(i["name"]);
                 node.appendChild(textnode);
                 node.classList.add("list-group-item");
+                node.addEventListener("click", e => {
+                    e.preventDefault();
+                    
+                    document.querySelector('#usermodal-sched-list').innerHTML = ""
+
+                    userModal(i)
+                    $('#usermodal').modal('show');
+                })
                 user_list.appendChild(node);
             });
         })
     })
 
     setInterval(() => {
-        const last_module = modules[modules.length - 1]
-        const module_time = last_module.querySelector("#time").attributes["data-endtime"]
-        const end = new Date(module_time.value) - new Date();
+        try {
+            const last_module = modules[modules.length - 1]
+            const module_time = last_module.querySelector("#time").attributes["data-endtime"]
+            const end = new Date(module_time.value) - new Date();
+        } catch (TypeError) {
+            countdown.innerHTML = "No school today! Sit back and relax"
+        }
 
         if (new Date(module_time.value) < new Date()) {
             countdown.innerHTML = "No more school today! Isn't that nice?";
