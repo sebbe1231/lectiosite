@@ -58,13 +58,12 @@ def get_users(search_type):
             "user_id": i.id
         })
     return jsonify(users)
-    
 
 @app.post("/get_user_sched")
 def get_user_sched():
     query = request.json.get("user_id")
 
-    sched_object = lect.get_school().get_user_by_id(int(query)).get_schedule(datetime.now()+timedelta(days=3), datetime.now()+timedelta(days=3), True)
+    sched_object = lect.get_school().get_user_by_id(int(query)).get_schedule(datetime.now(), datetime.now(), True)
     sched = []
     for i in sched_object:
         sched.append({
