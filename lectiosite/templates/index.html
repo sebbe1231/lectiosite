@@ -26,6 +26,8 @@
             <h1 class="text-center">Welcome, {{name}}!</h1>
             <h5 id="countdown" class="text-center">00:00:00 until school is done</h2>
             <div class="d-flex justify-content-between">
+
+                <!-- Todays sched mainscreen card -->
                 <div class="card mt-3 mx-3" style="width: 18rem; height: 0%;">
                     <div class="card-header text-white bg-dark">
                         <h5 class="card-title">{{cdate.strftime('%Y-%m-%d')}}</h5>
@@ -33,7 +35,7 @@
                     </div>
                     <ul class="list-group list-group-flush" id="modules">
                         {% for module in sched %}
-                        <li data-id="{{loop.index}}" class="list-group-item modul">
+                        <li data-id="{{loop.index}}" class="list-group-item clickable">
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <span>{{module.subject}}</span>
@@ -43,6 +45,8 @@
                                         {{stime + ' - ' + etime}}
                                     </div>
                                 </div>
+
+                                <!-- Pills -->
                                 <div class="d-flex flex-column justify-items-start ps-3">
                                     <div>
                                         {% if module.room %}
@@ -58,6 +62,8 @@
                                     {% endif %}
                                 </div>
                             </div>
+
+                            <!-- Displayed when hoverd over -->
                             <div style="display: none;">
                                 <hr>
                                 <span class="fst-italic d-block">{{module.teacher|e}}</span>
@@ -66,6 +72,8 @@
                                 {% endif %}
                             </div>
                         </li>
+
+                        <!-- Modal for the class pressed under sched -->
                         <div class="modal fade" tabindex="-1" aria-hidden="true" id="classmodal{{loop.index}}">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -108,8 +116,10 @@
                     </ul>
                 </div>
 
-                <!-- User search function -->
+                <!-- User search div -->
                 <div class="d-flex flex-column mt-3 mx-3" style="width: 25rem;">
+
+                    <!-- User search function -->
                     <form id="user-search">
                         <div class="input-group mb-0">
                             <input type="submit" class="btn btn-outline-secondary" value="All users">
@@ -132,18 +142,18 @@
 
                     <!-- Results for user search -->
                     <div>
-                        <div class="card m-1 scroll" id="user-search-results" style="display: none;">
+                        <div class="card scroll" id="user-search-results" style="display: none;">
                             <ul class="list-group list-group-flush" id="user-list">
                             </ul>
                         </div>
                     </div>
 
                     <!-- User search modal -->
-                    <div class="modal fade" tabindex="-1" aria-hidden="true" id="usermodal" data-bs-backdrop="static" data-user-id="">
+                    <div class="modal fade" tabindex="-1" data-bs-keyboard="false" aria-hidden="true" id="usermodal" data-bs-backdrop="static" data-user-id="">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h1 id="usermodal-name">Name</h1>
+                                    <h1 class="modal-title fs-5" id="usermodal-name">Name</h1>
                                     <button type="button" class="btn-close me-2" data-bs-dismiss="modal" aria-label="Close" id="usermodal-close"></button>
                                 </div>
                                 <div class="modal-body">
@@ -159,13 +169,7 @@
                                     </div>
                                     <hr>
                                     <div class="d-flex justify-content-evenly mt-3">
-                                        <button type="button" class="btn btn-outline-secondary" id="usermodal-sched-btn">Schedule</button>
-                                    </div>
-
-                                    <!-- User sched card -->
-                                    <div class="collapse" id="usermodal-collapse">
-                                        <div class="d-flex flex-row justify-content-" id="usermodal-sched-list">
-                                        </div>
+                                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" id="usermodal-sched-btn" data-bs-target="#user-sched-modal">Schedule</button>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-start modal-footer">
@@ -174,22 +178,78 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- User modal sched cards -->
+                    <div class="modal fade" id="user-sched-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="user-sched-modal-name"></h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="d-flex flex-row justify-content-start" id="usermodal-sched-list">
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between modal-footer">
+                                    <p id="usermodal-sched-id">ID</p>
+                                    <button class="btn btn-primary" data-bs-target="#usermodal" data-bs-toggle="modal">Back</button>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
                 </div>
                 
                 <!-- Room search function -->
                 <div class="d-flex flex-column mt-3 mx-3" style="width: 25rem;">
+
+                    <!-- Room search bar -->
                     <form id="room-search">
                         <div class="input-group mb-0">
                             <input type="submit" class="btn btn-outline-secondary" value="Rooms">
                             <input type="text" class="form-control" aria-label="Rooms search" id="rooms">
                         </div>
                     </form>
+
+                    <!-- progess bar -->
+                    <div id="room-search-load" class="align-self-center spinner-border text-secondary mt-4" role="status" style="display: none;">
+                        <span class="sr-only"></span>
+                    </div>
+
+                    <!-- Room search results -->
                     <div>
-                        <div class="card m-1 scroll">
+                        <div class="card scroll" id="room-search-results" style="display: none;">
                             <ul class="list-group list-group-flush" id="room-list">
                             </ul>
                         </div>
                     </div>
+
+                    <!-- Room sched modal -->
+                    <div class="modal fade" id="room-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="room-modal-header"></h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="alert alert-primary" role="alert" id="room-available">
+                                        ...
+                                    </div>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button type="button" class="btn btn-primary" id="room-sched-all">All</button>
+                                        <button type="button" class="btn btn-primary" id="room-sched-available">Available</button>
+                                        <button type="button" class="btn btn-primary" id="room-sched-not-available">Not Available</button>
+                                    </div>
+                                    <div class="d-flex flex-row justify-content-start" id="room-modal-card-holder">
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-start modal-footer">
+                                    <p id="roomm-id">ID</p>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
                 </div>
             </div>
         </div>

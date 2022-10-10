@@ -10,7 +10,6 @@ window.onload = () => {
     const student_search = document.querySelector("#student-search")
     const teacher_search = document.querySelector("#teacher-search")
     const initial_search = document.querySelector("#initial-search")
-    const user_search_bar = document.querySelector("#user-search-bar");
 
     // FUNCTIONS
     // Prepare user modal
@@ -32,6 +31,111 @@ window.onload = () => {
         $("#usermodal-id").text(data["user_id"]);
     }
 
+    // Room sched function
+    function getRoom(room_id, room_name) {
+        let last_date = null;
+        let last_end = "00:00";
+
+        $("#room-modal-card-holder").text("")
+
+        // Function for adding available time, so i dont have to type this out like 3 times lol
+        function availableTime(start, end, date_last) {
+            $(`#room-modal-card-${date_last}`).append(`
+                    <li class="list-group-item" id="available-time">
+                        <div class="d-flex flex-column justify-content-start">
+                            <div>
+                                <div class="text-muted">
+                                    <p>${start} - ${end}</p>
+                                </div>
+                            </div>
+                            <p class="text-success">AVAILABLE</p>
+                        </div>
+                    </li>
+                `);
+        }
+
+        $("#room-modal-header").text(room_name);
+
+        fetch(`/get_room_sched`, {
+            method: "POST",
+            body: JSON.stringify({room_id}),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(rep => rep.json()).then(data => {
+
+            // Add alert based on availability
+            $("#room-available").removeClass();
+            if (data[0] === true){
+                $("#room-available").addClass("alert alert-success");
+                $("#room-available").text("Currently Available");
+            }
+            else {
+                $("#room-available").addClass("alert alert-danger");
+                $("#room-available").text("Currently Unavailable");
+            }
+
+            data[1].forEach(i => {
+                start_time = i["start_time"].split(" ")[1].slice(0, 5)
+                end_time = i["end_time"].split(" ")[1].slice(0, 5)
+                let teacher;
+
+                // Shorten teacher to initials
+                try {
+                    teacher = i["teacher"].split('(')[1].split(')')[0];
+                } 
+                catch (TypeError) {
+                    teacher = i["teacher"]
+                }
+
+                // If a card for that date does not exist, make one
+                if (last_date !== i["start_time"].slice(0, 10)){
+                    // Add available time at end of day
+                    availableTime(last_end, "00:00", last_date);
+
+                    // Add new date card
+                    last_date = i["start_time"].slice(0, 10)
+
+                    $("#room-modal-card-holder").append(`
+                    <div>
+                        <div class="card" style="width: 13.5rem;">
+                            <div class="card-header text-white bg-dark">
+                            ${last_date}
+                            </div>
+                            <ul class="list-group list-group-flush" id="room-modal-card-${last_date}">
+                            </ul>
+                        </div>
+                    </div>
+                    `)
+                    last_end = "00:00"
+                }
+
+                // Append available time between classes
+                if (last_end !== start_time){
+                    availableTime(last_end, start_time, last_date)
+                }
+
+                // Append time to matching date
+                $(`#room-modal-card-${last_date}`).append(`
+                    <li class="list-group-item" id="not-available-time">
+                        <div class="d-flex flex-column justify-content-start">
+                            <div>
+                                <div class="text-muted">
+                                    <p>${start_time} - ${end_time}</p>
+                                    <p>${teacher}</p>
+                                </div>
+                            </div>
+                            <p class="text-danger">NOT AVAILABLE</p>
+                        </div>
+                    </li>
+                `); 
+
+                last_end = end_time;
+            });
+            availableTime(last_end, "00:00", last_date)
+        })
+    }
+
     // Function for the user search bar
     function searchUsers(search_type) {
         const user = users.value
@@ -51,6 +155,7 @@ window.onload = () => {
                 const textnode = document.createTextNode(i["name"]);
                 node.appendChild(textnode)
                 node.classList.add("list-group-item");
+                node.classList.add("clickable");
                 node.setAttribute('id',i["user_id"]);
                 node.addEventListener("click", e => {
                     e.preventDefault();
@@ -75,6 +180,9 @@ window.onload = () => {
         document.querySelector('#usermodal-sched-list').innerHTML = ""
 
         user_id =document.querySelector("#usermodal").attributes["data-user-id"].value
+        $("#usermodal-sched-id").text(user_id);
+        $("#user-sched-modal-name").text(document.querySelector("#usermodal-name").textContent);
+        let last_date = null;
 
         fetch(`/get_user_sched`, {
             method: "POST",
@@ -84,39 +192,82 @@ window.onload = () => {
             }
         }).then(rep => rep.json()).then(data => {
             data.forEach(i => {
-                console.log(typeof(i["start_time"]));
-                console.log(i["start_time"])
-                start_time = new Date(i["start_time"]).toISOString().split("T")[1].split(".")[0]
-                end_time = new Date(i["end_time"]).toISOString().split("T")[1].split(".")[0]
+                start_time = i["start_time"].split(" ")[1].slice(0, 5)
+                end_time = i["end_time"].split(" ")[1].slice(0, 5)
+                let teacher;
                 
-                //append sched list items
-                $("#usermodal-sched-list").append(`
+                // Shorten room to number only
+                if (i["room"] == null){
+                    room = "None"
+                }
+                else{
+                    room = i["room"].split('(')[0];
+                }
+
+                // Shorten teacher to initials
+                try {
+                    teacher = i["teacher"].split('(')[1].split(')')[0];
+                } 
+                catch (TypeError) {
+                    teacher = i["teacher"]
+                }
+                
+
+                // If a card for that date does not exist, make one
+                if (last_date !== i["start_time"].slice(0, 10)){
+                    last_date = i["start_time"].slice(0, 10)
+                    $("#usermodal-sched-list").append(`
                     <div>
-                        <div class="card" style="width: 18rem;">
-                            <div class="card-header">
-                            ${i["start_time"].slice()}
+                        <div class="card" style="width: 13.5rem;">
+                            <div class="card-header text-white bg-dark">
+                            ${last_date}
                             </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item" id="usermodal-sched-list">
-                                    <div class="d-flex justify-content-between">
-                                        <div>
-                                            <span>${i["subject"]}</span>
-                                            <div id="time" class="text-muted">
-                                                ${start_time.slice(0, 5)} - ${end_time.slice(0, 5)}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-column justify-content-start">
-                                        <span class="text-muted">${i["room"]}</span>
-                                        <span class="text-muted">${i["teacher"]}</span>
-                                    </div>
-                                </li>
+                            <ul class="list-group list-group-flush" id="user-sched-card-${last_date}">
                             </ul>
                         </div>
                     </div>
+                    `)
+                }
+                
+                // Append class to matching date
+                $(`#user-sched-card-${last_date}`).append(`
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <span>${i["subject"]}</span>
+                                <div class="text-muted">
+                                    <p>${start_time} - ${end_time}</p>
+                                    <p>${teacher}</p>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column justify-items-start ps-3">
+                                <div>
+                                    <span class="badge rounded-pill text-bg-secondary">${room}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
                 `);
             });
         })
+    })
+
+    // Show all room sched times
+    document.querySelector("#room-sched-all").addEventListener("click", e => {
+        $('[id=available-time]').css( 'display', 'block');
+        $('[id=not-available-time]').css( 'display', 'block');
+    })
+
+    // Show available room sched times
+    document.querySelector("#room-sched-available").addEventListener("click", e => {
+        $('[id=available-time]').css( 'display', 'block');
+        $('[id=not-available-time]').css( 'display', 'none');
+    })
+
+    // Show not available room sched times
+    document.querySelector("#room-sched-not-available").addEventListener("click", e => {
+        $('[id=available-time]').css( 'display', 'none');
+        $('[id=not-available-time]').css( 'display', 'block');
     })
 
     // Unfold sched when hover
@@ -133,23 +284,14 @@ window.onload = () => {
             $('#classmodal' + modules[index].attributes["data-id"].value).modal('show');
         })
     }
-
-    // Hide user sched when modal is closed
-    $( "#usermodal-close" ).click(e => {
-        $('#usermodal-collapse').collapse("hide")
-    });
-
-    // Make user sched only show, and not toggle
-    $("#usermodal-sched-btn").click(e => {
-        $("#usermodal-collapse").collapse("show")
-    });
-
     
     room_search.addEventListener("submit", e => {
         e.preventDefault();
         
         const room = rooms.value
         document.getElementById('room-list').innerHTML = ""
+        document.querySelector("#room-search-load").style.display = "block";
+        document.querySelector("#room-search-results").style.display = "none";
         
         fetch(`/search_rooms`, {
             method: "POST",
@@ -163,9 +305,19 @@ window.onload = () => {
                 const textnode = document.createTextNode(i["name"]);
                 node.appendChild(textnode);
                 node.classList.add("list-group-item");
-                node.setAttribute('id',i["room_id"])
+                node.classList.add("clickable");
+                node.setAttribute('id',i["room_id"]);
+                node.addEventListener("click", e => {
+                    e.preventDefault();
+                    
+                    getRoom(i["room_id"], i["name"]);
+                    $('#room-modal').modal('show');
+                })
                 room_list.appendChild(node);
             });
+        }).then(e => {
+            document.querySelector("#room-search-load").style.display = "none";
+            document.querySelector("#room-search-results").style.display = "block";
         })
     })
 

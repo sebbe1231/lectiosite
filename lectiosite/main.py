@@ -71,11 +71,32 @@ def get_user_sched():
             "title": i.title,
             "room": i.room,
             "teacher": i.teacher,
-            "start_time": i.start_time,
-            "start_sec": i.start_time.timestamp(),
-            "end_time": i.end_time,
+            "start_time": str(i.start_time),
+            "end_time": str(i.end_time),
             "status": str(i.status)
         })
+    return jsonify(sched)
+
+@app.post("/get_room_sched")
+def get_room_sched():
+    query = request.json.get("room_id")
+
+    sched_object = lect.get_school().get_room_by_id(int(query)).get_schedule(datetime.now()-timedelta(days=datetime.now().weekday()), datetime.now()+timedelta(days=6), True)
+    sched_available = lect.get_school().get_room_by_id(int(query)).is_available(datetime.now())
+    room_sched = []
+    sched = [sched_available]
+    for i in sched_object:
+        room_sched.append({
+            "subject": i.subject,
+            "title": i.title,
+            "teacher": i.teacher,
+            "start_time": str(i.start_time),
+            "end_time": str(i.end_time)
+        })
+        print(i.start_time)
+    
+    sched.append(room_sched)
+    
     return jsonify(sched)
 
 if __name__ == '__main__':

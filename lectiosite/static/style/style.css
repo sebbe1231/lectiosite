@@ -1,9 +1,9 @@
-.modul {
+.clickable {
     cursor: pointer;
     transition: all 50ms ease-in-out;
 }
 
-.modul:hover {
+.clickable:hover {
     background-color: #efefef;
 }
 
