@@ -108,6 +108,7 @@
                     </ul>
                 </div>
 
+                <!-- User search function -->
                 <div class="d-flex flex-column mt-3 mx-3" style="width: 25rem;">
                     <form id="user-search">
                         <div class="input-group mb-0">
@@ -123,12 +124,21 @@
                             <input type="text" class="form-control" aria-label="User search" id="users">
                         </div>
                     </form>
+
+                    <!-- progess bar -->
+                    <div id="user-search-load" class="align-self-center spinner-border text-secondary mt-4" role="status" style="display: none;">
+                        <span class="sr-only"></span>
+                    </div>
+
+                    <!-- Results for user search -->
                     <div>
-                        <div class="card m-1 scroll">
+                        <div class="card m-1 scroll" id="user-search-results" style="display: none;">
                             <ul class="list-group list-group-flush" id="user-list">
                             </ul>
                         </div>
                     </div>
+
+                    <!-- User search modal -->
                     <div class="modal fade" tabindex="-1" aria-hidden="true" id="usermodal" data-bs-backdrop="static" data-user-id="">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                             <div class="modal-content">
@@ -149,17 +159,12 @@
                                     </div>
                                     <hr>
                                     <div class="d-flex justify-content-evenly mt-3">
-                                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#usermodal-collapse" aria-controls="usermodal-collapse" aria-expanded="false" id="usermodal-sched-btn">Schedule</button>
+                                        <button type="button" class="btn btn-outline-secondary" id="usermodal-sched-btn">Schedule</button>
                                     </div>
+
+                                    <!-- User sched card -->
                                     <div class="collapse" id="usermodal-collapse">
-                                        <div class="d-flex justify-content-center mt-3">
-                                            <div class="card" style="width: 18rem;">
-                                                <div class="card-header">
-                                                Today
-                                                </div>
-                                                <ul class="list-group list-group-flush" id="usermodal-sched-list">
-                                                </ul>
-                                            </div>
+                                        <div class="d-flex flex-row justify-content-" id="usermodal-sched-list">
                                         </div>
                                     </div>
                                 </div>
@@ -170,7 +175,8 @@
                         </div>
                     </div>
                 </div>
-
+                
+                <!-- Room search function -->
                 <div class="d-flex flex-column mt-3 mx-3" style="width: 25rem;">
                     <form id="room-search">
                         <div class="input-group mb-0">

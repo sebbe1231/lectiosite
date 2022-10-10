@@ -63,7 +63,7 @@ def get_users(search_type):
 def get_user_sched():
     query = request.json.get("user_id")
 
-    sched_object = lect.get_school().get_user_by_id(int(query)).get_schedule(datetime.now(), datetime.now(), True)
+    sched_object = lect.get_school().get_user_by_id(int(query)).get_schedule(datetime.now()-timedelta(days=datetime.now().weekday()), datetime.now()+timedelta(days=6), True)
     sched = []
     for i in sched_object:
         sched.append({
@@ -72,6 +72,7 @@ def get_user_sched():
             "room": i.room,
             "teacher": i.teacher,
             "start_time": i.start_time,
+            "start_sec": i.start_time.timestamp(),
             "end_time": i.end_time,
             "status": str(i.status)
         })

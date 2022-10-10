@@ -10,6 +10,7 @@ window.onload = () => {
     const student_search = document.querySelector("#student-search")
     const teacher_search = document.querySelector("#teacher-search")
     const initial_search = document.querySelector("#initial-search")
+    const user_search_bar = document.querySelector("#user-search-bar");
 
     // FUNCTIONS
     // Prepare user modal
@@ -35,6 +36,8 @@ window.onload = () => {
     function searchUsers(search_type) {
         const user = users.value
         user_list.innerHTML = "";
+        document.querySelector("#user-search-results").style.display = "none";
+        document.querySelector("#user-search-load").style.display = "block";
 
         fetch(`/search_users/${search_type}`, {
             method: "POST",
@@ -46,18 +49,22 @@ window.onload = () => {
             data.forEach(i => {
                 const node = document.createElement("li");
                 const textnode = document.createTextNode(i["name"]);
-                node.appendChild(textnode);
+                node.appendChild(textnode)
                 node.classList.add("list-group-item");
                 node.setAttribute('id',i["user_id"]);
                 node.addEventListener("click", e => {
                     e.preventDefault();
-
+    
                     userModal(i)
                     $('#usermodal').modal('show');
                 })
                 user_list.appendChild(node);
             });
+        }).then(e => {
+            document.querySelector("#user-search-load").style.display = "none";
+            document.querySelector("#user-search-results").style.display = "block";
         })
+        
     }
 
     //EVENT LISTENERS 
@@ -77,25 +84,36 @@ window.onload = () => {
             }
         }).then(rep => rep.json()).then(data => {
             data.forEach(i => {
+                console.log(typeof(i["start_time"]));
+                console.log(i["start_time"])
                 start_time = new Date(i["start_time"]).toISOString().split("T")[1].split(".")[0]
                 end_time = new Date(i["end_time"]).toISOString().split("T")[1].split(".")[0]
                 
                 //append sched list items
                 $("#usermodal-sched-list").append(`
-                    <li class="list-group-item" id="usermodal-sched-list">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <span>${i["subject"]}</span>
-                                <div id="time" class="text-muted">
-                                    ${start_time.slice(0, 5)} - ${end_time.slice(0, 5)}
-                                </div>
+                    <div>
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-header">
+                            ${i["start_time"].slice()}
                             </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item" id="usermodal-sched-list">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <span>${i["subject"]}</span>
+                                            <div id="time" class="text-muted">
+                                                ${start_time.slice(0, 5)} - ${end_time.slice(0, 5)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-column justify-content-start">
+                                        <span class="text-muted">${i["room"]}</span>
+                                        <span class="text-muted">${i["teacher"]}</span>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
-                        <div class="d-flex flex-column justify-content-start">
-                            <span class="text-muted">${i["room"]}</span>
-                            <span class="text-muted">${i["teacher"]}</span>
-                        </div>
-                    </li>
+                    </div>
                 `);
             });
         })
@@ -119,6 +137,11 @@ window.onload = () => {
     // Hide user sched when modal is closed
     $( "#usermodal-close" ).click(e => {
         $('#usermodal-collapse').collapse("hide")
+    });
+
+    // Make user sched only show, and not toggle
+    $("#usermodal-sched-btn").click(e => {
+        $("#usermodal-collapse").collapse("show")
     });
 
     
@@ -171,10 +194,13 @@ window.onload = () => {
     })
 
     setInterval(() => {
+        let last_module
+        let module_time
+        let end
         try {
-            const last_module = modules[modules.length - 1]
-            const module_time = last_module.querySelector("#time").attributes["data-endtime"]
-            const end = new Date(module_time.value) - new Date();
+            last_module = modules[modules.length - 1]
+            module_time = last_module.querySelector("#time").attributes["data-endtime"]
+            end = new Date(module_time.value) - new Date();
         } catch (TypeError) {
             countdown.innerHTML = "No school today! Sit back and relax"
         }
