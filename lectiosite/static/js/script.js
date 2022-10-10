@@ -55,6 +55,7 @@ window.onload = () => {
         }
 
         $("#room-modal-header").text(room_name);
+        $("#room-id").text(room_id);
 
         fetch(`/get_room_sched`, {
             method: "POST",
