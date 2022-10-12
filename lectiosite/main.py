@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request, jsonify, send_file
 from io import BytesIO
 from lectio import Lectio, exceptions
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from os import environ
+import calendar
 
 app = Flask(__name__, static_folder='static/', static_url_path='')
 lect = Lectio(environ['INST_ID'], environ['USERNAME'], environ['PASSWORD'])
@@ -14,6 +15,18 @@ def index():
     name = name.replace(">", "&gt")
     return render_template('index.html', name=lect.me().name, 
         sched=sched, cdate=datetime.now())
+
+@app.route("/usersched")
+def usersched():
+    today = datetime.today()
+    datem = datetime(today.year, today.month, 1)
+    last_datem = datetime(today.year, today.month, calendar.monthrange(today.year, today.month)[1])
+
+    days = calendar.monthrange(today.year, today.month)[1]
+    
+    sched = lect.me().get_schedule(datem, last_datem)
+    
+    return render_template('usersched.html', sched=sched, cdate=datetime.now(), days=days)
 
 @app.post("/search_rooms")
 def get_rooms():

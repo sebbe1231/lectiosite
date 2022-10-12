@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Your Schedule</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+            integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js"
+            integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk"
+            crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        
+        <script src="js/usersched-script.js" defer></script>
+        <link href="/style/style.css" rel="stylesheet" />
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <div class="border-end mx-2">
+                    <a class="navbar-brand">LectioSite</a>
+                </div>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link mx-2" href="/">Home</a>
+                        <a class="nav-link active mx-2" aria-current="page" href="/usersched?user_id=192639">Your Schedule</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="container mt-4 mx-4">
+            <div class="d-flex flex-row d-flex flex-row justify-content-start">
+                {% for i in sched %}
+                <div>
+                    <div class="card mt-3 mx-3" style="width: 15rem; height: 0%;">
+                        <div class="card-header text-white bg-dark">
+                            <h5 class="card-title">{{i.start_time}}</h5>
+                        </div>
+                        <ul class="list-group list-group-flush" id="modules">
+                            <li data-id="{{loop.index}}" class="list-group-item clickable">
+                                {{i}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div> 
+    </body>
+</html>
