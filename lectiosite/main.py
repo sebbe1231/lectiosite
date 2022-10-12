@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, jsonify
-from lectio import Lectio
+from flask import Flask, render_template, request, jsonify, send_file
+from io import BytesIO
+from lectio import Lectio, exceptions
 from datetime import datetime, timedelta
 from os import environ
 
@@ -54,10 +55,28 @@ def get_users(search_type):
             "class": i.class_name,
             "initials": i.initials,
             "type": i.type.get_str(),
-            "image": i.image,
             "user_id": i.id
         })
     return jsonify(users)
+
+@app.get("/get_user_image")
+def get_image():
+    user_id = request.args.get("id")
+
+    if not user_id:
+        return "Bad request", 400
+    
+    try:
+        user = lect.get_school().get_user_by_id(user_id)
+    except exceptions.UserDoesNotExistError:
+        return "Not found", 404
+
+    r = lect._request(user.image, full_url=True)
+
+    return send_file(
+        BytesIO(r.content),
+        "image/jpeg"
+    )
 
 @app.post("/get_user_sched")
 def get_user_sched():
@@ -75,6 +94,7 @@ def get_user_sched():
             "end_time": str(i.end_time),
             "status": str(i.status)
         })
+
     return jsonify(sched)
 
 @app.post("/get_room_sched")

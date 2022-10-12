@@ -29,6 +29,7 @@ window.onload = () => {
         
         $("#usermodal-type").text(data["type"]);
         $("#usermodal-id").text(data["user_id"]);
+        $("#usermodal-img").attr("src", `/get_user_image?id=${data["user_id"]}`);
     }
 
     // Room sched function
@@ -133,6 +134,7 @@ window.onload = () => {
 
                 last_end = end_time;
             });
+            // Add available time at the end of everything
             availableTime(last_end, "00:00", last_date)
         })
     }
@@ -166,7 +168,9 @@ window.onload = () => {
                 })
                 user_list.appendChild(node);
             });
-        }).then(e => {
+        }).catch(error => {
+            console.log(error);
+        }).finally(e => {
             document.querySelector("#user-search-load").style.display = "none";
             document.querySelector("#user-search-results").style.display = "block";
         })
@@ -230,12 +234,21 @@ window.onload = () => {
                     `)
                 }
                 
+                let class_status = `<span>${i["subject"]}</span>`
+
+                if (i["status"] === "cancelled") {
+                    class_status = `<span class="text-danger"><del>${i["subject"]}</del></span>`
+                } 
+                else if (i["status"] === "changed") {
+                    class_status = `<span class="text-warning">${i["subject"]}</span>`
+                }
+
                 // Append class to matching date
                 $(`#user-sched-card-${last_date}`).append(`
                     <li class="list-group-item">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <span>${i["subject"]}</span>
+                                ${class_status}
                                 <div class="text-muted">
                                     <p>${start_time} - ${end_time}</p>
                                     <p>${teacher}</p>
