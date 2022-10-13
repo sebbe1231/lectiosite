@@ -23,17 +23,33 @@ def usersched():
     last_datem = datetime(today.year, today.month, calendar.monthrange(today.year, today.month)[1])
 
     days = calendar.monthrange(today.year, today.month)[1]
+
+    first_day = datem-timedelta(days=datem.weekday())
+    print(first_day)
+
+    last_day = last_datem-timedelta(days=last_datem.weekday())
+    last_day = last_day + timedelta(days=6)
+    print(last_day)
+
     
     sched = lect.me().get_schedule(datem, last_datem)
     
     dates = []
-    for i in sched:
-        if i.start_time.date() not in dates:
-            dates.append(i.start_time.date())
-        print(i.start_time.date())
-        print(i.start_time.strftime("%A"))
+    for i in range(42):
+        dates.append(first_day+timedelta(days=i))
 
-    return render_template('usersched.html', sched=sched, cdate=datetime.now(), dates = dates)
+    actual_dates = []
+    for i in sched:
+        if i.start_time.date() not in actual_dates:
+            actual_dates.append(i.start_time.date())
+
+    # for i in sched:
+    #     if i.start_time.date() not in dates:
+    #         dates.append(i.start_time.date())
+        # print(i.start_time.date())
+        # print(i.start_time.strftime("%A"))
+
+    return render_template('usersched.html', sched=sched, cdate=datetime.now(), dates = dates, actual_dates=actual_dates)
 
 @app.post("/search_rooms")
 def get_rooms():

@@ -34,15 +34,46 @@
                 </div>
             </div>
         </nav>
-        <div id="schedmonth">
-            <div class="row">
-                <div class="col-md-2"></div>
-                <div class="col-md-2"></div>
-                <div class="col-md-2"></div>
-                <div class="col-md-2"></div>
-                <div class="col-md-2"></div>
-                <div class="col-md-2"></div>
-                <div class="col-md-2"></div>
+        <div class="container-fluid mt-2">
+            <div class="grid-container">
+                <div class="grid-item">Monday</div>
+                <div class="grid-item">Tuesday</div>
+                <div class="grid-item">Wednesday</div>
+                <div class="grid-item">Thursday</div>
+                <div class="grid-item">Friday</div>
+                <div class="grid-item">Saturday</div>
+                <div class="grid-item">Sunday</div>
+                {% for d in dates %}
+                <div class="grid-item">
+                    <div>
+                        <div class="card mt-2 mx-2">
+                            <div class="card-header text-white {% if d.month != cdate.month %} bg-secondary {% else %} bg-dark {% endif %}">
+                                <h5 class="card-title">{{d.date()}}</h5>
+                            </div>
+                            <ul class="list-group list-group-flush fs-6">
+                                {% if (d.date() not in actual_dates) and (d.month == cdate.month) %}
+                                <li class="list-group-item text-bg-success">
+                                    <span>No Activities!</span>
+                                </li>
+                                {% endif %}
+
+                                {% for i in sched %}
+                                {% if i.start_time.date() == d.date() %}
+                                <li class="list-group-item">
+                                    <div style="white-space: nowrap; overflow-x: hidden;">
+                                        <span>{{i.subject}}</span>
+                                    </div>
+                                    {% set stime = i.start_time.strftime('%H:%M') %}
+                                    {% set etime = i.end_time.strftime('%H:%M') %}
+                                    <p class="text-muted">{{stime + ' - ' + etime}}</p>
+                                </li>
+                                {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
         </div>
         <!-- <div class="container mt-4 mx-4">
