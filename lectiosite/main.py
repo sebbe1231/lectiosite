@@ -26,7 +26,14 @@ def usersched():
     
     sched = lect.me().get_schedule(datem, last_datem)
     
-    return render_template('usersched.html', sched=sched, cdate=datetime.now(), days=days)
+    dates = []
+    for i in sched:
+        if i.start_time.date() not in dates:
+            dates.append(i.start_time.date())
+        print(i.start_time.date())
+        print(i.start_time.strftime("%A"))
+
+    return render_template('usersched.html', sched=sched, cdate=datetime.now(), dates = dates)
 
 @app.post("/search_rooms")
 def get_rooms():

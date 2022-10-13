@@ -34,23 +34,77 @@
                 </div>
             </div>
         </nav>
-        <div class="container mt-4 mx-4">
+        <div id="schedmonth">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-2"></div>
+                <div class="col-md-2"></div>
+                <div class="col-md-2"></div>
+                <div class="col-md-2"></div>
+                <div class="col-md-2"></div>
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+        <!-- <div class="container mt-4 mx-4">
             <div class="d-flex flex-row d-flex flex-row justify-content-start">
-                {% for i in sched %}
+                {% for d in dates %}
                 <div>
-                    <div class="card mt-3 mx-3" style="width: 15rem; height: 0%;">
+                    <div class="card mt-3 mx-3" style="width: 15rem">
                         <div class="card-header text-white bg-dark">
-                            <h5 class="card-title">{{i.start_time}}</h5>
+                            <h5 class="card-title">{{d}}</h5>
                         </div>
                         <ul class="list-group list-group-flush" id="modules">
-                            <li data-id="{{loop.index}}" class="list-group-item clickable">
-                                {{i}}
+                            {% for module in sched %}
+                            {% if module.start_time.date() == d %}
+                            <li class="list-group-item clickable">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        {% if module.status == 'cancelled' %}
+                                        <span class="text-danger"><del>{{module.subject}}</del></span>
+                                        {% else %}
+                                        <span>{{module.subject}}</span>
+                                        {% endif %}
+                                        
+                                        <div id="time" data-endtime="{{module.end_time.isoformat()}}" class="text-muted">
+                                            {% set stime = module.start_time.strftime('%H:%M') %}
+                                            {% set etime = module.end_time.strftime('%H:%M') %}
+                                            {{stime + ' - ' + etime}}
+                                        </div>
+                                    </div>
+    
+                                    
+                                    <div class="d-flex flex-column justify-items-start ps-3">
+                                        <div>
+                                            {% if module.room %}
+                                            <span class="badge rounded-pill text-bg-secondary">{{module.room.split('(')[0]|e}}</span>
+                                            {% else %}
+                                            <span class="badge rounded-pill text-bg-secondary">None</span>
+                                            {% endif %}
+                                        </div>
+                                        {% if module.start_time <= cdate and module.end_time>= cdate %}
+                                            <div>
+                                                <span class="badge rounded-pill text-bg-success">Now</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+    
+                                
+                                <div style="display: none;">
+                                    <hr>
+                                    <span class="fst-italic d-block">{{module.teacher|e}}</span>
+                                    {% if module.extra_info %}
+                                    <span class="fw-light text-muted">{{module.extra_info|e}}</span>
+                                    {% endif %}
+                                </div>
                             </li>
+                            {% endif %}
+                            {% endfor %}
                         </ul>
                     </div>
                 </div>
                 {% endfor %}
             </div>
-        </div> 
+        </div>  -->
     </body>
 </html>
