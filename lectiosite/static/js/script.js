@@ -270,18 +270,27 @@ window.onload = () => {
     document.querySelector("#room-sched-all").addEventListener("click", e => {
         $('[id=available-time]').css( 'display', 'block');
         $('[id=not-available-time]').css( 'display', 'block');
+        $('#room-sched-all').addClass("active");
+        $('#room-sched-available').removeClass("active");
+        $('#room-sched-not-available').removeClass("active");
     })
 
     // Show available room sched times
     document.querySelector("#room-sched-available").addEventListener("click", e => {
         $('[id=available-time]').css( 'display', 'block');
         $('[id=not-available-time]').css( 'display', 'none');
+        $('#room-sched-all').removeClass("active");
+        $('#room-sched-available').addClass("active");
+        $('#room-sched-not-available').removeClass("active");
     })
 
     // Show not available room sched times
     document.querySelector("#room-sched-not-available").addEventListener("click", e => {
         $('[id=available-time]').css( 'display', 'none');
         $('[id=not-available-time]').css( 'display', 'block');
+        $('#room-sched-all').removeClass("active");
+        $('#room-sched-available').removeClass("active");
+        $('#room-sched-not-available').addClass("active");
     })
 
     // Unfold sched when hover
