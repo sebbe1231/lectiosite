@@ -19,35 +19,40 @@ def index():
 @app.route("/usersched")
 def usersched():
     today = datetime.today()
+
+    # First day of the monst
     datem = datetime(today.year, today.month, 1)
+
+    # Last day of the month
     last_datem = datetime(today.year, today.month, calendar.monthrange(today.year, today.month)[1])
 
+    # First day of the full calander range
     first_day = datem-timedelta(days=datem.weekday())
-    print(first_day)
     
-    sched_list = lect.me().get_schedule(datem, last_datem)
+    sched = lect.me().get_schedule(datem, last_datem)
     
+    # All dates in the the full 42 day calander range
     dates = []
     for i in range(42):
         dates.append(first_day+timedelta(days=i))
 
     actual_dates = []
-    for i in sched_list:
+    for i in sched:
         if i.start_time.date() not in actual_dates:
             actual_dates.append(i.start_time.date())
 
-    sched = []
-    for i in sched_list:
-        sched.append({
-            "subject": i.subject,
-            "title": i.title,
-            "room": i.room,
-            "teacher": i.teacher,
-            "start_time": i.start_time,
-            "end_time": i.end_time,
-            "status": str(i.status),
-            "extra_info": i.extra_info
-        })
+    # data = []
+    # for i in sched:
+    #     data.append({
+    #         "subject": i.subject,
+    #         "title": i.title,
+    #         "room": i.room,
+    #         "teacher": i.teacher,
+    #         "start_time": i.start_time,
+    #         "end_time": i.end_time,
+    #         "status": str(i.status),
+    #         "extra_info": i.extra_info
+    #     })
 
     return render_template('usersched.html', sched=sched, cdate=datetime.now(), dates = dates, actual_dates=actual_dates)
 

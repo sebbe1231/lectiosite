@@ -35,7 +35,7 @@
             </div>
         </nav>
         <div class="container-fluid mt-2">
-            <div class="grid-container">
+            <div class="grid-container" id="calendar-grid">
                 <div class="grid-item">Monday</div>
                 <div class="grid-item">Tuesday</div>
                 <div class="grid-item">Wednesday</div>
@@ -59,14 +59,16 @@
 
                                 {% for i in sched %}
                                 {% if i.start_time.date() == d.date() %}
-                                <li class="list-group-item clickable" data-module='{{i}}' onclick="moduleModal(event)">
+                                <!-- This is where all the data to be used by .js is stored -->
+                                <li class="list-group-item clickable" data-subject='{{i.subject}}' data-title="{{i.title}}" data-room="{{i.room}}" data-teacher="{{i.teacher}}" data-start="{{i.start_time}}" data-end="{{i.end_time}}" data-status="{{i.status}}" data-extra="{{i.extra_info}}" data-url="{{i.url}}" onclick="moduleModal(event)">
                                     <div style="white-space: nowrap; overflow-x: hidden;">
                                         {% if i.status == cancelled %}
-                                        <span class="text-danger"><del>{{i.subject}}</del></span>
+                                        <span class="text-danger"><del>{{i.subject|e}}</del></span>
                                         {% else %}
-                                        <span>{{i.subject}}</span>
+                                        <span>{{i.subject|e}}</span>
                                         {% endif %}
                                     </div>
+                                    
                                     {% set stime = i.start_time.strftime('%H:%M') %}
                                     {% set etime = i.end_time.strftime('%H:%M') %}
                                     <p class="text-muted">{{stime + ' - ' + etime}}</p>
@@ -92,14 +94,17 @@
                     <h3 id="modal-body-time">
                         69:00 - 42:00
                     </h3>
+                    <div>
+                        <p class="h4" id="modal-title">Title</p>
+                    </div>
                     <div class="d-flex justify-content-center">
                         <div class="flex-even">
                             <p class="fw-bold">Room:</p>
-                            <p id="modal-body-room">1.03a</p>
+                            <p id="modal-body-room">?</p>
                         </div>
                         <div class="flex-even">
                             <p class="fw-bold">Teacher:</p>
-                            <p id="modal-body-teacher">sjs</p>
+                            <p id="modal-body-teacher">?</p>
                         </div>
                     </div>
                     <div id="modal-body-extra-div" style="display: block;">
@@ -111,7 +116,7 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-start modal-footer">
-                    <a href="link lol" target="_blank"><small>Module link</small></a>
+                    <a href="?" target="_blank" id="modal-footer-url"><small>Module link</small></a>
                 </div>
               </div>
             </div>
