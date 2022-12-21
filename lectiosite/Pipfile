@@ -4,12 +4,14 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-"lectio.py" = {ref = "dev", git = "https://github.com/dnorhoj/Lectio.py.git"}
 flask = "*"
 requests = "*"
 beautifulsoup4 = "*"
+"lectio.py" = {ref = "dev", git = "https://github.com/dnorhoj/lectio.py.git"}
 
 [dev-packages]
+pylint = "*"
+autopep8 = "*"
 
 [requires]
 python_version = "3.10"

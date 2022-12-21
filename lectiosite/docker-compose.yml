@@ -1,0 +1,8 @@
+services:
+  lectiosite:
+    build: .
+    container_name: lectiosite
+    ports:
+      - "127.0.0.1:8080:8080"
+    env_file:
+      - .env
