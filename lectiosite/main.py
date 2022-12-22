@@ -45,20 +45,11 @@ def usersched():
         if i.start_time.date() not in actual_dates:
             actual_dates.append(i.start_time.date())
 
-    # data = []
-    # for i in sched:
-    #     data.append({
-    #         "subject": i.subject,
-    #         "title": i.title,
-    #         "room": i.room,
-    #         "teacher": i.teacher,
-    #         "start_time": i.start_time,
-    #         "end_time": i.end_time,
-    #         "status": str(i.status),
-    #         "extra_info": i.extra_info
-    #     })
-
     return render_template('usersched.html', sched=sched, cdate=datetime.now(), dates=dates, actual_dates=actual_dates)
+
+@app.route("/absence")
+def absence():
+    return render_template('absence.html', absence=lect.me().get_absences().subjects, absence_total=lect.me().get_absences().total_absences)
 
 
 @app.post("/search_rooms")
@@ -118,7 +109,7 @@ def get_image():
     except exceptions.UserDoesNotExistError:
         return "Not found", 404
 
-    r = lect._request(user.image, full_url=True)
+    r = lect._request(user.get_image_url(), full_url=True)
 
     return send_file(
         BytesIO(r.content),
