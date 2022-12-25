@@ -37,8 +37,13 @@ def usersched():
 
     # All dates in the the full 42 day calander range
     dates = []
-    for i in range(42):
-        dates.append(first_day+timedelta(days=i))
+    i = 0
+    for _ in range(6):
+        y = []
+        for _ in range(7):
+            y.append(first_day+timedelta(days=i))
+            i += 1
+        dates.append(y)
 
     actual_dates = []
     for i in sched:
@@ -51,6 +56,28 @@ def usersched():
 def absence():
     return render_template('absence.html', absence=lect.me().get_absences().subjects, absence_total=lect.me().get_absences().total_absences)
 
+@app.post("/get_sched")
+def get_sched():
+    query = request.json.get("date")
+    query = datetime.strptime(query[:-14], "%Y-%m-%d")
+
+    sched = lect.me().get_schedule(query, query)
+
+    data = []
+    for i in sched:
+        data.append({
+            "subject": i.subject,
+            "title": i.title,
+            "teacher": i.teacher,
+            "room": i.room,
+            "extra_info": i.extra_info,
+            "start_time": i.start_time,
+            "end_time": i.end_time,
+            "status": str(i.status),
+            "url": i.url
+        })
+
+    return jsonify(data)
 
 @app.post("/search_rooms")
 def get_rooms():
@@ -89,7 +116,7 @@ def get_users(search_type):
     for i in users_object:
         users.append({
             "name": i.name,
-            "class": i.class_name,
+            "class": i.get_class_name(),
             "initials": i.initials,
             "type": i.type.get_str(),
             "user_id": i.id

@@ -21,69 +21,82 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
             <div class="container-fluid">
                 <div class="border-end mx-2">
                     <a class="navbar-brand">LectioSite</a>
                 </div>
-                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navmenu"
+                    >
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navmenu">
                     <div class="navbar-nav">
                         <a class="nav-link mx-2" href="/">Home</a>
-                        <a class="nav-link active mx-2" aria-current="page" href="/usersched?user_id=192639">Your Schedule</a>
+                        <a class="nav-link active mx-2" href="/usersched">Your Schedule</a>
                         <a class="nav-link mx-2" href="/absence">Your Absence</a>
                     </div>
                 </div>
             </div>
         </nav>
-        <div class="container-fluid mt-2">
-            <div class="grid-container" id="calendar-grid">
-                <div class="grid-item">Monday</div>
-                <div class="grid-item">Tuesday</div>
-                <div class="grid-item">Wednesday</div>
-                <div class="grid-item">Thursday</div>
-                <div class="grid-item">Friday</div>
-                <div class="grid-item">Saturday</div>
-                <div class="grid-item">Sunday</div>
-                {% for d in dates %}
-                <div class="grid-item">
-                    <div>
-                        <div class="card my-2 mx-2">
-                            <div class="card-header text-white {% if d.month != cdate.month %} bg-secondary {% elif d.date() == cdate.date() %} bg-success {% else %} bg-dark {% endif %}">
-                                <h5 class="card-title">{{d.date()}}</h5>
-                            </div>
-                            <ul class="list-group list-group-flush fs-6">
-                                {% if (d.date() not in actual_dates) and (d.month == cdate.month) %}
-                                <li class="list-group-item text-bg-success">
-                                    <span>No Activities!</span>
-                                </li>
-                                {% endif %}
 
-                                {% for i in sched %}
-                                {% if i.start_time.date() == d.date() %}
-                                <!-- This is where all the data to be used by .js is stored -->
-                                <li class="list-group-item clickable" data-subject='{{i.subject}}' data-title="{{i.title}}" data-room="{{i.room}}" data-teacher="{{i.teacher}}" data-start="{{i.start_time}}" data-end="{{i.end_time}}" data-status="{{i.status}}" data-extra="{{i.extra_info}}" data-url="{{i.url}}" onclick="moduleModal(event)">
-                                    <div style="white-space: nowrap; overflow-x: hidden;">
-                                        {% if i.status == cancelled %}
-                                        <span class="text-danger"><del>{{i.subject|e}}</del></span>
-                                        {% else %}
-                                        <span>{{i.subject|e}}</span>
-                                        {% endif %}
-                                    </div>
-                                    
-                                    {% set stime = i.start_time.strftime('%H:%M') %}
-                                    {% set etime = i.end_time.strftime('%H:%M') %}
-                                    <p class="text-muted">{{stime + ' - ' + etime}}</p>
-                                </li>
-                                {% endif %}
-                                {% endfor %}
+        <!-- Gonna redo this whole thing with -->
+        <!-- wanna make it look like https://preview.colorlib.com/theme/bootstrap/calendar-04/ -->
+
+        <div class="container mt-4">
+            <div class="row">
+                <!-- calender -->
+                <div class="col-12 col-md-6">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <p>YEAR</p>
+                            <p>MONTH</p>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 40em;">Mon</th>
+                                        <th style="width: 40em;">Tue</th>
+                                        <th style="width: 40em;">Wed</th>
+                                        <th style="width: 40em;">Thu</th>
+                                        <th style="width: 40em;">Fri</th>
+                                        <th style="width: 40em;">Sat</th>
+                                        <th style="width: 40em;">Sun</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for d in dates %}
+                                    <tr>
+                                        {% for i in d %}
+                                        <td class="{% if i.month != cdate.month %} text-muted {% elif i.date() == cdate.date() %} text-success clickable {% else %} clickable {% endif %}" onclick="dateClick(event)" data-date="{{i.date()}}">
+                                            {{i.day}}
+                                        </td>
+                                        {% endfor %}
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-center" id="sched-date">{{cdate.date()}}</h5>
+                            <ul class="list-group list-group-flush fs-6" id="sched-list">
+                                
                             </ul>
                         </div>
                     </div>
                 </div>
-                {% endfor %}
             </div>
         </div>
-
+        
         <div class="modal fade" tabindex="-1" aria-hidden="true" id="sched-modal">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
               <div class="modal-content">
@@ -121,6 +134,6 @@
                 </div>
               </div>
             </div>
-          </div>
+        </div>
     </body>
 </html>

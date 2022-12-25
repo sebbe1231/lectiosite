@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>lectio site</title>
+        <title>Absence</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
             integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -22,12 +22,22 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
             <div class="container-fluid">
                 <div class="border-end mx-2">
                     <a class="navbar-brand">LectioSite</a>
                 </div>
-                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navmenu"
+                    >
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navmenu">
                     <div class="navbar-nav">
                         <a class="nav-link mx-2" href="/">Home</a>
                         <a class="nav-link mx-2" href="/usersched">Your Schedule</a>
@@ -39,83 +49,79 @@
         <div class="container mt-4">
 
             <!-- Flex container for cards -->
-            <div class="d-flex justify-content-between">
+            <div class="row">
                 <!-- Physical absence card/table -->
-                <div class="card text-center">
-                    <div class="card-header">
+                <div class="col-12 col-md-6 pb-2 px-1">
+                    <h3 class="mt-2 fw-bold text-center">
                         Physical Absence
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th rowspan="2"></th>
-                                    <th colspan="2">Calculated</th>
-                                    <th colspan="2">Year</th>
-                                </tr>
-                                <tr>
-                                    <th>Percent</th>
-                                    <th>Modules</th>
-                                    <th>Percent</th>
-                                    <th>Modules</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-group-divider">
-                                {% for abs in absence %}
-                                <tr>
-                                    <!-- Each elemnt contains an "if none", that instead replaces it with an empty string -->
-                                    <!-- Thats why it looks messy, surely im not just bad at coding, trust -->
-                                    <th scope="row">{{abs.subject|e}}</th>
-                                    <td>{{abs.absence_data.physical_calculated_percentage if abs.absence_data.physical_calculated_percentage is not none}}%</td>
-                                    <td>{{abs.absence_data.physical_calculated_absent|int if abs.absence_data.physical_calculated_absent is not none}}
-                                        /{{abs.absence_data.physical_calculated_total|int if abs.absence_data.physical_calculated_total is not none}}</td>
-                                    <td>{{abs.absence_data.physical_percentage if abs.absence_data.physical_percentage is not none}}%</td>
-                                    <td>{{abs.absence_data.physical_absent|int if abs.absence_data.physical_absent is not none}}
-                                        /{{abs.absence_data.physical_total|int if abs.absence_data.physical_total is not none}}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                    </h3>
+                    <table class="table table-bordered table-striped text-center">
+                        <thead>
+                            <tr>
+                                <th rowspan="2"></th>
+                                <th colspan="2">Calculated</th>
+                                <th colspan="2">Year</th>
+                            </tr>
+                            <tr>
+                                <th>Percent</th>
+                                <th>Modules</th>
+                                <th>Percent</th>
+                                <th>Modules</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            {% for abs in absence %}
+                            <tr>
+                                <!-- Each elemnt contains an "if none", that instead replaces it with an empty string -->
+                                <!-- Thats why it looks messy, surely im not just bad at coding, trust -->
+                                <th scope="row">{{abs.subject|e}}</th>
+                                <td>{{abs.absence_data.physical_calculated_percentage if abs.absence_data.physical_calculated_percentage is not none}}%</td>
+                                <td>{{abs.absence_data.physical_calculated_absent|int if abs.absence_data.physical_calculated_absent is not none}}
+                                    /{{abs.absence_data.physical_calculated_total|int if abs.absence_data.physical_calculated_total is not none}}</td>
+                                <td>{{abs.absence_data.physical_percentage if abs.absence_data.physical_percentage is not none}}%</td>
+                                <td>{{abs.absence_data.physical_absent|int if abs.absence_data.physical_absent is not none}}
+                                    /{{abs.absence_data.physical_total|int if abs.absence_data.physical_total is not none}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
 
                 <!-- Assignment absence card/table -->
-                <div class="card text-center">
-                    <div class="card-header">
+                <div class="col-12 col-md-6 px-1">
+                    <h3 class="mt-2 fw-bold text-center">
                         Assignment Absence
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th rowspan="2"></th>
-                                    <th colspan="2">Calculated</th>
-                                    <th colspan="2">Year</th>
-                                </tr>
-                                <tr>
-                                    <th>Percent</th>
-                                    <th>Modules</th>
-                                    <th>Percent</th>
-                                    <th>Modules</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-group-divider">
-                                {% for abs in absence %}
-                                <tr>
-                                    <!-- Each elemnt contains an "if none", that instead replaces it with an empty string -->
-                                    <!-- Thats why it looks messy, surely im not just bad at coding, trust -->
-                                    <th scope="row">{{abs.subject|e}}</th>
-                                    <td>{{abs.absence_data.assignment_calculated_percentage if abs.absence_data.assignment_calculated_percentage is not none}}%</td>
-                                    <td>{{abs.absence_data.assignment_calculated_absent|int if abs.absence_data.assignment_calculated_absent is not none}}
-                                        /{{abs.absence_data.assignment_calculated_total|int if abs.absence_data.assignment_calculated_total is not none}}</td>
-                                    <td>{{abs.absence_data.assignment_percentage if abs.absence_data.assignment_percentage is not none}}%</td>
-                                    <td>{{abs.absence_data.assignment_absent|int if abs.absence_data.assignment_absent is not none}}
-                                        /{{abs.absence_data.assignment_total|int if abs.absence_data.assignment_total is not none}}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                    </h3>
+                    <table class="table table-bordered table-striped text-center">
+                        <thead>
+                            <tr>
+                                <th rowspan="2"></th>
+                                <th colspan="2">Calculated</th>
+                                <th colspan="2">Year</th>
+                            </tr>
+                            <tr>
+                                <th>Percent</th>
+                                <th>Modules</th>
+                                <th>Percent</th>
+                                <th>Modules</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            {% for abs in absence %}
+                            <tr>
+                                <!-- Each elemnt contains an "if none", that instead replaces it with an empty string -->
+                                <!-- Thats why it looks messy, surely im not just bad at coding, trust -->
+                                <th scope="row">{{abs.subject|e}}</th>
+                                <td>{{abs.absence_data.assignment_calculated_percentage if abs.absence_data.assignment_calculated_percentage is not none}}%</td>
+                                <td>{{abs.absence_data.assignment_calculated_absent|int if abs.absence_data.assignment_calculated_absent is not none}}
+                                    /{{abs.absence_data.assignment_calculated_total|int if abs.absence_data.assignment_calculated_total is not none}}</td>
+                                <td>{{abs.absence_data.assignment_percentage if abs.absence_data.assignment_percentage is not none}}%</td>
+                                <td>{{abs.absence_data.assignment_absent|int if abs.absence_data.assignment_absent is not none}}
+                                    /{{abs.absence_data.assignment_total|int if abs.absence_data.assignment_total is not none}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

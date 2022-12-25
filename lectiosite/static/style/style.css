@@ -7,6 +7,10 @@
     background-color: #efefef;
 }
 
+.clicked {
+    background-color: #b6b6b6 !important;
+}
+
 p {
     margin: 0;
 }
