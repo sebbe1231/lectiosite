@@ -49,12 +49,14 @@ def usersched():
     for i in sched:
         if i.start_time.date() not in actual_dates:
             actual_dates.append(i.start_time.date())
+        
+    datetime.now()
 
     return render_template('usersched.html', sched=sched, cdate=datetime.now(), dates=dates, actual_dates=actual_dates)
 
 @app.route("/absence")
 def absence():
-    return render_template('absence.html', absence=lect.me().get_absences().subjects, absence_total=lect.me().get_absences().total_absences)
+    return render_template('absence.html', absence=lect.me().get_absences().subjects, total=lect.me().get_absences().total_absences)
 
 @app.post("/get_sched")
 def get_sched():

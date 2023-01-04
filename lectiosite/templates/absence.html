@@ -51,7 +51,7 @@
             <!-- Flex container for cards -->
             <div class="row">
                 <!-- Physical absence card/table -->
-                <div class="col-12 col-md-6 pb-2 px-1">
+                <div class="col-12 col-md-6 pb-2 px-0" style="white-space: nowrap; overflow-x: auto;">
                     <h3 class="mt-2 fw-bold text-center">
                         Physical Absence
                     </h3>
@@ -72,23 +72,43 @@
                         <tbody class="table-group-divider">
                             {% for abs in absence %}
                             <tr>
-                                <!-- Each elemnt contains an "if none", that instead replaces it with an empty string -->
+                                <!-- Each elemnt contains an data, show it, else dont :) -->
                                 <!-- Thats why it looks messy, surely im not just bad at coding, trust -->
-                                <th scope="row">{{abs.subject|e}}</th>
-                                <td>{{abs.absence_data.physical_calculated_percentage if abs.absence_data.physical_calculated_percentage is not none}}%</td>
-                                <td>{{abs.absence_data.physical_calculated_absent|int if abs.absence_data.physical_calculated_absent is not none}}
-                                    /{{abs.absence_data.physical_calculated_total|int if abs.absence_data.physical_calculated_total is not none}}</td>
-                                <td>{{abs.absence_data.physical_percentage if abs.absence_data.physical_percentage is not none}}%</td>
-                                <td>{{abs.absence_data.physical_absent|int if abs.absence_data.physical_absent is not none}}
-                                    /{{abs.absence_data.physical_total|int if abs.absence_data.physical_total is not none}}</td>
+                                <th scope="row" style="white-space: nowrap; overflow-x: hidden;">{{abs.subject|e}}</th>
+                                {% if abs.absence_data.physical_calculated_total %}
+                                    <td>{{abs.absence_data.physical_calculated_percentage}}%</td>
+                                    <td>{{abs.absence_data.physical_calculated_absent|int}}
+                                        /{{abs.absence_data.physical_calculated_total|int}}</td>
+                                {% else %}
+                                    <td></td><td></td>
+                                {% endif %}
+                                
+                                {% if abs.absence_data.physical_total %}
+                                    <td>{{abs.absence_data.physical_percentage}}%</td>
+                                    <td>{{abs.absence_data.physical_absent|int}}
+                                        /{{abs.absence_data.physical_total|int}}</td>
+                                {% else %}
+                                    <td></td><td></td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
+                            <tr class="table-primary">
+                                <th scope="row">Total</th>
+                                <td>{{total.physical_calculated_percentage}}%</td>
+                                <td>{{total.physical_calculated_absent|int}}/
+                                    {{total.physical_calculated_total|int}}
+                                </td>
+                                <td>{{total.physical_percentage}}%</td>
+                                <td>{{total.physical_absent|int}}/
+                                    {{total.physical_total|int}}
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
 
                 <!-- Assignment absence card/table -->
-                <div class="col-12 col-md-6 px-1">
+                <div class="col-12 col-md-6 px-1" style="white-space: nowrap; overflow-x: auto;">
                     <h3 class="mt-2 fw-bold text-center">
                         Assignment Absence
                     </h3>
@@ -112,14 +132,34 @@
                                 <!-- Each elemnt contains an "if none", that instead replaces it with an empty string -->
                                 <!-- Thats why it looks messy, surely im not just bad at coding, trust -->
                                 <th scope="row">{{abs.subject|e}}</th>
-                                <td>{{abs.absence_data.assignment_calculated_percentage if abs.absence_data.assignment_calculated_percentage is not none}}%</td>
-                                <td>{{abs.absence_data.assignment_calculated_absent|int if abs.absence_data.assignment_calculated_absent is not none}}
-                                    /{{abs.absence_data.assignment_calculated_total|int if abs.absence_data.assignment_calculated_total is not none}}</td>
-                                <td>{{abs.absence_data.assignment_percentage if abs.absence_data.assignment_percentage is not none}}%</td>
-                                <td>{{abs.absence_data.assignment_absent|int if abs.absence_data.assignment_absent is not none}}
-                                    /{{abs.absence_data.assignment_total|int if abs.absence_data.assignment_total is not none}}</td>
+                                {% if abs.absence_data.assignment_calculated_total %}
+                                    <td>{{abs.absence_data.assignment_calculated_percentage}}%</td>
+                                    <td>{{abs.absence_data.assignment_calculated_absent|int}}
+                                        /{{abs.absence_data.assignment_calculated_total|int}}</td>
+                                {% else %}
+                                    <td></td><td></td>
+                                {% endif %}
+                                
+                                {% if abs.absence_data.assignment_total %}
+                                    <td>{{abs.absence_data.assignment_percentage}}%</td>
+                                    <td>{{abs.absence_data.assignment_absent|int}}
+                                        /{{abs.absence_data.assignment_total|int}}</td>
+                                {% else %}
+                                    <td></td><td></td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
+                            <tr class="table-primary">
+                                <th scope="row">Total</th>
+                                <td>{{total.assignment_calculated_percentage}}%</td>
+                                <td>{{total.assignment_calculated_absent|int}}/
+                                    {{total.assignment_calculated_total|int}}
+                                </td>
+                                <td>{{total.assignment_percentage}}%</td>
+                                <td>{{total.assignment_absent|int}}/
+                                    {{total.assignment_total|int}}
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

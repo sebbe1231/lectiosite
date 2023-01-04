@@ -54,10 +54,15 @@ const clickedModule = e => {
 
     $("#modal-header").text(clicked_module["data-subject"].value);
     $("#modal-body-time").text(`${clicked_module["data-start-time"].value.slice(16, -7)} - ${clicked_module["data-end-time"].value.slice(16, -7)}`);
-    $("#modal-title").text(clicked_module["data-title"].value);
+    console.log()
+    if (clicked_module["data-title"].value !== "null"){
+        $("#modal-title").text(clicked_module["data-title"].value);
+    }
     $("#modal-body-room").text(clicked_module["data-room"].value);
     $("#modal-body-teacher").text(clicked_module["data-teacher"].value);
-    $("#modal-body-extra").text(clicked_module["data-extra-info"].value);
+    if (clicked_module["data-extra-info"].value !== "null"){
+        $("#modal-body-extra").text(clicked_module["data-extra-info"].value);
+    }
     $("#modal-footer-url").attr("href", clicked_module["data-url"].value);
 
     $("#sched-modal").modal('show');
